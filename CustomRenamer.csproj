@@ -7,8 +7,8 @@
     <ProjectGuid>{534CBED0-DF97-4085-8916-912BA52E08F0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Renamer.Cazzar</RootNamespace>
-    <AssemblyName>Renamer.Cazzar</AssemblyName>
+    <RootNamespace>Renamer.deodex</RootNamespace>
+    <AssemblyName>Renamer.deodex</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -31,10 +31,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MoonSharp.Interpreter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=921e73ce94aa17f8, processorArchitecture=MSIL">
+      <HintPath>packages\MoonSharp.2.0.0.0\lib\net40-client\MoonSharp.Interpreter.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>packages\MySqlBackup.NET.2.0.11.1\lib\net461\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySqlBackup, Version=2.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MySqlBackup.NET.2.0.11.1\lib\net461\MySqlBackup.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>ShokoServer\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <HintPath>packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,8 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyRenamer.cs" />
-    <Compile Include="NoSpaceRenamer.cs" />
+    <Compile Include="LuaRenamer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -53,16 +67,44 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="ShokoServer\Shoko.Commons\Shoko.Commons.csproj">
+    <ProjectReference Include="..\ShokoServer\CloudFileSystem\NutzCode.CloudFileSystem.Plugins.AmazonCloudDrive\NutzCode.CloudFileSystem.Plugins.AmazonCloudDrive.csproj">
+      <Project>{d202b61e-a658-4208-83fc-745e04f43bde}</Project>
+      <Name>NutzCode.CloudFileSystem.Plugins.AmazonCloudDrive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShokoServer\CloudFileSystem\NutzCode.CloudFileSystem.Plugins.GoogleDrive\NutzCode.CloudFileSystem.Plugins.GoogleDrive.csproj">
+      <Project>{964a62e6-2dae-4723-926d-d3e9597b5213}</Project>
+      <Name>NutzCode.CloudFileSystem.Plugins.GoogleDrive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShokoServer\CloudFileSystem\NutzCode.CloudFileSystem.Plugins.LocalFileSystem\NutzCode.CloudFileSystem.Plugins.LocalFileSystem.csproj">
+      <Project>{2a705c96-21d4-4061-876f-1bb954e39d25}</Project>
+      <Name>NutzCode.CloudFileSystem.Plugins.LocalFileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShokoServer\CloudFileSystem\NutzCode.CloudFileSystem.Plugins.OneDrive\NutzCode.CloudFileSystem.Plugins.OneDrive.csproj">
+      <Project>{d24d15aa-3e71-45a5-b2af-7490681def68}</Project>
+      <Name>NutzCode.CloudFileSystem.Plugins.OneDrive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShokoServer\CloudFileSystem\NutzCode.CloudFileSystem\NutzCode.CloudFileSystem.csproj">
+      <Project>{29861d1a-968c-49ca-a637-88b391aa5063}</Project>
+      <Name>NutzCode.CloudFileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShokoServer\CloudFileSystem\NutzCode.Libraries.Web\NutzCode.Libraries.Web.csproj">
+      <Project>{865c8b13-eb43-439e-9d69-ce7b54dca4ff}</Project>
+      <Name>NutzCode.Libraries.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShokoServer\Shoko.CLI\Shoko.CLI.csproj">
+      <Project>{3a8e0177-9701-4a59-a6cd-16c6908839ea}</Project>
+      <Name>Shoko.CLI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShokoServer\Shoko.Commons\Shoko.Commons.csproj">
       <Project>{e0399140-9902-4f38-909d-85e42717ec30}</Project>
       <Name>Shoko.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="ShokoServer\Shoko.Commons\Shoko.Models\Shoko.Models.csproj">
-      <Project>{F73F9DF6-580A-4341-B516-8717626F9D42}</Project>
+    <ProjectReference Include="..\ShokoServer\Shoko.Commons\Shoko.Models\Shoko.Models.csproj">
+      <Project>{f73f9df6-580a-4341-b516-8717626f9d42}</Project>
       <Name>Shoko.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="ShokoServer\Shoko.Server\Shoko.Server.csproj">
-      <Project>{DA8F0783-0F82-4106-9860-6F09BA2EA522}</Project>
+    <ProjectReference Include="..\ShokoServer\Shoko.Server\Shoko.Server.csproj">
+      <Project>{da8f0783-0f82-4106-9860-6f09ba2ea522}</Project>
       <Name>Shoko.Server</Name>
     </ProjectReference>
   </ItemGroup>
