@@ -54,11 +54,14 @@ file_meta = ("%s %s %s%s%s"):format(x_to_p(string.split(file.File_VideoResolutio
                                     string.split(file.File_AudioCodec, "'")[1])
 
 episode_number = ternary(anime.GetAnimeTypeRAW() != "movie",
-                         (":: %s%02i%s "):format(prefix, 
-                                                 episode.EpisodeNumber, 
-                                                 ternary(file.FileVersion != 1, 
-                                                         "v"..file.FileVersion, 
-                                                         "")),
+                         (":: %s%02i%s%s "):format(prefix, 
+                                                   episode.EpisodeNumber,
+                                                   ternary(#episodes > 1,
+                                                           ("-%02i"):format(episodes[#episodes].EpisodeNumber),
+                                                           ""), 
+                                                   ternary(file.FileVersion != 1, 
+                                                           "v"..file.FileVersion, 
+                                                           "")),
                          "")
 
 name = ("[%s] %s %s(%s) [%s]"):format(file.Anime_GroupNameShort,

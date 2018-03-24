@@ -34,26 +34,26 @@ namespace Renamer.deodex {
             // base data         
             string scriptCode = _rawScript.Script;
             SVR_AniDB_File file = video.GetAniDBFile();
-            List<AniDB_Episode> episode = new List<AniDB_Episode>();
+            List<AniDB_Episode> episodes = new List<AniDB_Episode>();
             SVR_AniDB_Anime anime;
    
             // error handling (not all is in this)
             if (file == null) {
                 var epIntmdry = video.GetAnimeEpisodes();
                 if (epIntmdry.Count == 0) return "*Error: Unable to get episode for file";
-                episode.Add(epIntmdry[0].AniDB_Episode);
-                anime = RepoFactory.AniDB_Anime.GetByAnimeID(episode[0].AnimeID);
+                episodes.Add(epIntmdry[0].AniDB_Episode);
+                anime = RepoFactory.AniDB_Anime.GetByAnimeID(episodes[0].AnimeID);
                 if (anime == null) return "*Error: Unable to get anime for file";
                 
             }
             else {
-                episode = file.Episodes;
-                if (episode.Count == 0) return "*Error: Unable to get episode for file";
-                anime = RepoFactory.AniDB_Anime.GetByAnimeID(episode[0].AnimeID);
+                episodes = file.Episodes;
+                if (episodes.Count == 0) return "*Error: Unable to get episode for file";
+                anime = RepoFactory.AniDB_Anime.GetByAnimeID(episodes[0].AnimeID);
                 if (anime == null) return "*Error: Unable to get anime for file";
             }                      
 
-            if (scriptCode == null) return "*Error: No script available for renamer";
+            if (string.IsNullOrEmpty(scriptCode)) return "*Error: No script available for renamer";
 
             // TODO: start filling up tables (crudely, will implement better later (maybe (probably (hopefully))))
             // future me: actually this makes for a very strong renamer
@@ -68,13 +68,14 @@ namespace Renamer.deodex {
 
             DynValue videoLuaObject = UserData.Create(video);
             DynValue fileLuaObject = UserData.Create(file);
-            DynValue episodeLuaObject = UserData.Create(episode[0]);
+            DynValue episodeLuaObject = UserData.Create(episodes[0]);
             DynValue animeLuaObject = UserData.Create(anime);
 
             _script.Globals["EpisodeType"] = UserData.CreateStatic<EpisodeType>();
             _script.Globals.Set("video", videoLuaObject);
             _script.Globals.Set("file", fileLuaObject);
             _script.Globals.Set("episode", episodeLuaObject);
+            _script.Globals["episodes"] = episodes;
             _script.Globals.Set("anime", animeLuaObject);
             // (I have)/(deodex has) no idea if this is dangerous. It's as if the interpreter is as strong as the C# method 
             // (as long as the private-public keywords are actually used correctly, it should be fine)
@@ -85,6 +86,7 @@ namespace Renamer.deodex {
             // run the script, get the variable "name" (str)
             _script.DoString(scriptCode);
             string scriptResult = _script.Globals.Get("name").ToString();  
+            // Substring used since the string is being wrapped with "" for some reason
             if (string.IsNullOrEmpty(scriptResult.Substring(1, scriptResult.Length - 2)))   
                 return "*Error: the new filename is empty (script error)";
 
@@ -103,7 +105,7 @@ namespace Renamer.deodex {
         }
                
         public (ImportFolder dest, string folder) GetDestinationFolder(SVR_VideoLocal_Place video) {
-            return (new LegacyRenamer(_rawScript)).GetDestinationFolder(video);
+            return (new LegacyRenamer(null)).GetDestinationFolder(video);
         }
     }
 }
